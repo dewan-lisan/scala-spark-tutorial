@@ -13,6 +13,11 @@ object ReduceExample {
     val integerRdd = sc.parallelize(inputIntegers)
 
     val product = integerRdd.reduce((x, y) => x * y)
-    println("product is :" + product)
+    println("product is : " + product)
+
+    //LD testing basic map
+    val squire = integerRdd.map(x => x*x)
+    println("squire result : " + squire.collect().mkString(", "))
+    squire.collect().foreach(println)
   }
 }

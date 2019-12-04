@@ -1,6 +1,13 @@
 package com.sparkTutorial.pairRdd.mapValues
 
+import com.sparkTutorial.commons.Utils
+import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.rdd.RDD
+
 object AirportsUppercaseProblem {
+  def testPrint(str1: String): Unit ={
+    println(str1)
+  }
 
   def main(args: Array[String]) {
 
@@ -19,5 +26,15 @@ object AirportsUppercaseProblem {
        ("Wewak Intl", "PAPUA NEW GUINEA")
        ...
      */
+    val conf = new SparkConf().setAppName("airports").setMaster("local")
+    val sc = new SparkContext(conf)
+
+    val airportsRDD: RDD[String] = sc.textFile("in/airports.text") //regular RDD
+    val airportPairRdd: RDD[(String, String)] = airportsRDD.map(line => (line.split(Utils.COMMA_DELIMITER)(1),
+      line.split(Utils.COMMA_DELIMITER)(3)))    //converting RDD to PairRDD i.e. to (Key, Value) pair
+    val canadianAirportsPairRDD: RDD[(String, String)] = airportPairRdd.filter(abc => abc._2 == "\"Canada\"") //what to see Canadian airports only
+    val canadianAirpPairRddUpper: RDD[(String, String)] = canadianAirportsPairRDD.mapValues(x => x.toUpperCase) //mapValue works ONLY with values of (Kye, Value) pair
+    canadianAirpPairRddUpper.saveAsTextFile("out/airport_mapValue_uppercase.txt")
+
   }
 }

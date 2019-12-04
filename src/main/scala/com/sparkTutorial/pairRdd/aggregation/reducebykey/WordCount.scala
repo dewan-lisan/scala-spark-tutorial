@@ -1,6 +1,7 @@
 package com.sparkTutorial.pairRdd.aggregation.reducebykey
 
 import org.apache.log4j.{Level, Logger}
+import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 
 object WordCount {
@@ -11,10 +12,10 @@ object WordCount {
     val sc = new SparkContext(conf)
 
     val lines = sc.textFile("in/word_count.text")
-    val wordRdd = lines.flatMap(line => line.split(" "))
-    val wordPairRdd = wordRdd.map(word => (word, 1))
+    val wordRdd: RDD[String] = lines.flatMap(line => line.split(" "))
+    val wordPairRdd: RDD[(String, Int)] = wordRdd.map(word => (word, 1))
 
-    val wordCounts = wordPairRdd.reduceByKey((x, y) => x + y)
+    val wordCounts: RDD[(String, Int)] = wordPairRdd.reduceByKey((x, y) => x + y)
     for ((word, count) <- wordCounts.collect()) println(word + " : " + count)
   }
 }

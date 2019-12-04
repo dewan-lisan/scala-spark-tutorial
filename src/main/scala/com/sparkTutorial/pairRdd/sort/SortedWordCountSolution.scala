@@ -1,6 +1,7 @@
 package com.sparkTutorial.pairRdd.sort
 
 import org.apache.log4j.{Level, Logger}
+import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 
 object SortedWordCountSolution {
@@ -17,7 +18,7 @@ object SortedWordCountSolution {
     val wordPairRdd = wordRdd.map(word => (word, 1))
     val wordToCountPairs = wordPairRdd.reduceByKey((x, y) => x + y)
 
-    val countToWordParis = wordToCountPairs.map(wordToCount => (wordToCount._2, wordToCount._1))
+    val countToWordParis: RDD[(Int, String)] = wordToCountPairs.map(wordToCount => (wordToCount._2, wordToCount._1))
 
     val sortedCountToWordParis = countToWordParis.sortByKey(ascending = false)
 

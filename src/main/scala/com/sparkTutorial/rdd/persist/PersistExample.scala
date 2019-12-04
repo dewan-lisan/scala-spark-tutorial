@@ -17,6 +17,6 @@ object PersistExample {
     integerRdd.persist(StorageLevel.MEMORY_ONLY)
 
     integerRdd.reduce((x, y) => x * y)
-    integerRdd.count()
+    println(integerRdd.count())
   }
 }

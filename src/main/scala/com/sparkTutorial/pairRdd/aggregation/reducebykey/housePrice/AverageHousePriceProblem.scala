@@ -33,6 +33,8 @@ object AverageHousePriceProblem {
 
        3, 1 and 2 mean the number of bedrooms. 325000 means the average price of houses with 3 bedrooms is 325000.
      */
+      //select avg(price), bedroom from real_estate_v group by bedroom
+
   }
 
 }

@@ -1,7 +1,7 @@
 package com.sparkTutorial.sparkSql
 
 import org.apache.log4j.{Level, Logger}
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{DataFrame, DataFrameReader, Dataset, SparkSession}
 
 object TypedDataset {
 
@@ -12,18 +12,18 @@ object TypedDataset {
   def main(args: Array[String]) {
     Logger.getLogger("org").setLevel(Level.ERROR)
     val session = SparkSession.builder().appName("StackOverFlowSurvey").master("local[*]").getOrCreate()
-    val dataFrameReader = session.read
+    val dataFrameReader: DataFrameReader = session.read
 
-    val responses = dataFrameReader
+    val responses: DataFrame = dataFrameReader
       .option("header", "true")
       .option("inferSchema", value = true)
       .csv("in/2016-stack-overflow-survey-responses.csv")
 
-    val responseWithSelectedColumns = responses.select("country", "age_midpoint", "occupation", "salary_midpoint")
+    val responseWithSelectedColumns: DataFrame = responses.select("country", "age_midpoint", "occupation", "salary_midpoint")
 
     import session.implicits._
-    val typedDataset = responseWithSelectedColumns.as[Response]
-
+    val typedDataset: Dataset[Response] = responseWithSelectedColumns.as[Response]
+/*
     System.out.println("=== Print out schema ===")
     typedDataset.printSchema()
 
@@ -44,7 +44,7 @@ object TypedDataset {
 
     System.out.println("=== Group by country and aggregate by average salary middle point ===")
     typedDataset.filter(response => response.salary_midpoint.isDefined).groupBy("country").avg(SALARY_MIDPOINT).show()
-
+*/
     System.out.println("=== Group by salary bucket ===")
     typedDataset.map(response => response.salary_midpoint.map(point => Math.round(point / 20000) * 20000).orElse(None))
       .withColumnRenamed("value", SALARY_MIDPOINT_BUCKET)

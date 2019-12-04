@@ -2,6 +2,7 @@ package com.sparkTutorial.rdd.collect
 
 import org.apache.log4j.Level
 import org.apache.log4j.Logger
+import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 
 object CollectExample {
@@ -10,11 +11,11 @@ object CollectExample {
     val conf = new SparkConf().setAppName("collect").setMaster("local[*]")
     val sc = new SparkContext(conf)
 
-    val inputWords = List("spark", "hadoop", "spark", "hive", "pig", "cassandra", "hadoop")
-    val wordRdd = sc.parallelize(inputWords)
+    val inputWords: List[String] = List("spark", "hadoop", "spark", "hive", "pig", "cassandra", "hadoop")
+    val wordRdd: RDD[String] = sc.parallelize(inputWords)  //this converts List to RDD
 
-    val words = wordRdd.collect()
+    val words: Array[String] = wordRdd.collect()
 
-    for (word <- words) println(word)
+    for (word: String <- words) println(word)
   }
 }
